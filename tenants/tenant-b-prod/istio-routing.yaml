@@ -5,7 +5,7 @@ metadata:
   namespace: tenant-b-prod
 spec:
   selector:
-    istio: ingressgateway
+    app: istio-ingress
   servers:
   - port:
       number: 80
