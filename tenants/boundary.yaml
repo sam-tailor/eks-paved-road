@@ -1,11 +1,4 @@
 apiVersion: v1
-kind: Namespace
-metadata:
-  name: tenant-a-prod
-  labels:
-    istio-injection: enabled  # <--- THIS IS THE MAGIC LABEL
----
-apiVersion: v1
 kind: ResourceQuota
 metadata:
   name: compute-quota
