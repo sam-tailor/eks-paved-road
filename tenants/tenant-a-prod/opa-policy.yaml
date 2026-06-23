@@ -1,0 +1,28 @@
+apiVersion: templates.gatekeeper.sh/v1
+kind: ConstraintTemplate
+metadata:
+  name: k8sprivileged
+spec:
+  crd:
+    spec:
+      names:
+        kind: K8sPrivileged
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package k8sprivileged
+        violation[{"msg": msg}] {
+            c := input.review.object.spec.containers[_]
+            c.securityContext.privileged == true
+            msg := sprintf("🔥 SECURITY BREACH BLOCKED: Container '%v' is not allowed to run in privileged mode!", [c.name])
+        }
+---
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sPrivileged
+metadata:
+  name: deny-privileged-containers
+spec:
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
