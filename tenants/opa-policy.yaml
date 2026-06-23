@@ -10,11 +10,11 @@ spec:
   targets:
     - target: admission.k8s.gatekeeper.sh
       rego: |
-        package k8sprivileged
+        package k8scontainerprivileged
         violation[{"msg": msg}] {
-            c := input.review.object.spec.containers[_]
-            c.securityContext.privileged == true
-            msg := sprintf("🔥 SECURITY BREACH BLOCKED: Container '%v' is not allowed to run in privileged mode!", [c.name])
+          c := input.review.object.spec.containers[_]
+          c.securityContext.privileged
+          msg := "Privileged containers are not allowed!"
         }
 ---
 apiVersion: constraints.gatekeeper.sh/v1beta1
