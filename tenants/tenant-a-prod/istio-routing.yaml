@@ -2,7 +2,7 @@ apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
   name: public-gateway
-  namespace: tenant-b-prod
+  namespace: tenant-a-prod
 spec:
   selector:
     istio: ingressgateway
@@ -18,7 +18,7 @@ apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
   name: web-route
-  namespace: tenant-b-prod
+  namespace: tenant-a-prod
 spec:
   hosts:
   - "*"
@@ -27,7 +27,7 @@ spec:
   http:
   - match:
     - uri:
-        prefix: /tenant-b
+        prefix: /tenant-a
     rewrite:
       uri: /
     route:
@@ -40,7 +40,7 @@ apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
   name: allow-public-web
-  namespace: tenant-b-prod
+  namespace: tenant-a-prod
 spec:
   selector:
     matchLabels:
