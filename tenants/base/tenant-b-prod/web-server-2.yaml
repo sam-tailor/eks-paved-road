@@ -12,13 +12,16 @@ spec:
     metadata:
       labels:
         app: web-server-2
+      # NEW BLOCK: Taming the invisible Istio sidecar limits
+      annotations:
+        sidecar.istio.io/proxyCPULimit: "200m"
+        sidecar.istio.io/proxyMemoryLimit: "256Mi"
     spec:
       containers:
       - name: nginx
         image: nginx:latest
         ports:
         - containerPort: 80
-        # NEW BLOCK: Satisfying the namespace ResourceQuota
         resources:
           requests:
             cpu: "100m"
