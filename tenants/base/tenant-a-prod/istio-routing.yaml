@@ -14,20 +14,6 @@ spec:
     hosts:
     - "*"
 ---
-http:
-  # NEW ROUTE: Intercept /app2 and route to web-server-2
-  - match:
-    - uri:
-        prefix: /app2
-    rewrite:
-      uri: /
-    route:
-    - destination:
-        host: web-server-2
-        port:
-          number: 80
-  # ... your existing routes stay here ...
----
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
@@ -39,6 +25,18 @@ spec:
   gateways:
   - public-gateway
   http:
+  # NEW ROUTE: Intercept /app2 and route to web-server-2
+  - match:
+    - uri:
+        prefix: /app2
+    rewrite:
+      uri: /
+    route:
+    - destination:
+        host: web-server-2
+        port:
+          number: 80
+  # EXISTING ROUTE: Intercept /tenant-a and route to web-server
   - match:
     - uri:
         prefix: /tenant-a
