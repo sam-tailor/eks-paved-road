@@ -2,8 +2,6 @@ apiVersion: templates.gatekeeper.sh/v1
 kind: ConstraintTemplate
 metadata:
   name: k8sprivileged
-  annotations:
-    argocd.argoproj.io/sync-wave: "1"
 spec:
   crd:
     spec:
@@ -20,16 +18,3 @@ spec:
           c.securityContext.privileged
           msg := "Privileged containers are not allowed!"
         }
----
-apiVersion: constraints.gatekeeper.sh/v1beta1
-kind: K8sPrivileged
-metadata:
-  name: deny-privileged-containers
-  annotations:
-    argocd.argoproj.io/sync-wave: "2"
-    argocd.argoproj.io/sync-options: Validate=false   # <--- THE MAGIC KEY
-spec:
-  match:
-    kinds:
-      - apiGroups: [""]
-        kinds: ["Pod"]
