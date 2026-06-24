@@ -25,6 +25,18 @@ spec:
   gateways:
   - public-gateway
   http:
+  # NEW ROUTE: Intercept /app2 and route to web-server-2
+  - match:
+    - uri:
+        prefix: /app2
+    rewrite:
+      uri: /
+    route:
+    - destination:
+        host: web-server-2
+        port:
+          number: 80
+  # EXISTING ROUTE: Intercept /tenant-b and route to web-server
   - match:
     - uri:
         prefix: /tenant-b
@@ -45,6 +57,22 @@ spec:
   selector:
     matchLabels:
       app: web
+  action: ALLOW
+  rules:
+  - to:
+    - operation:
+        ports: ["80"]
+---
+# NEW POLICY: Allow Istio traffic into the second web server
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-public-web-2
+  namespace: tenant-b-prod
+spec:
+  selector:
+    matchLabels:
+      app: web-server-2
   action: ALLOW
   rules:
   - to:
