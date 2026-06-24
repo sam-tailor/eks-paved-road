@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-server-2
+  namespace: tenant-a-prod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web-server-2
+  template:
+    metadata:
+      labels:
+        app: web-server-2
+      # Pre-emptively taming the Istio sidecar limits
+      annotations:
+        sidecar.istio.io/proxyCPULimit: "200m"
+        sidecar.istio.io/proxyMemoryLimit: "256Mi"
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+        # Satisfying the namespace ResourceQuota
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "250m"
+            memory: "256Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-server-2
+  namespace: tenant-a-prod
+spec:
+  selector:
+    app: web-server-2
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
