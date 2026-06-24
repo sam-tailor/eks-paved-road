@@ -2,11 +2,15 @@ apiVersion: templates.gatekeeper.sh/v1
 kind: ConstraintTemplate
 metadata:
   name: k8sprivileged
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   crd:
     spec:
       names:
         kind: K8sPrivileged
+      validation:
+        legacySchema: false
   targets:
     - target: admission.k8s.gatekeeper.sh
       rego: |
@@ -21,6 +25,9 @@ apiVersion: constraints.gatekeeper.sh/v1beta1
 kind: K8sPrivileged
 metadata:
   name: deny-privileged-containers
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-options: Validate=false   # <--- THE MAGIC KEY
 spec:
   match:
     kinds:
