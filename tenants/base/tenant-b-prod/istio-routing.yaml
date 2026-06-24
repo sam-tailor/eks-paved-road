@@ -25,10 +25,10 @@ spec:
   gateways:
   - public-gateway
   http:
-  # NEW ROUTE: Intercept /app2 and route to web-server-2
+  # NEW ROUTE: Intercept /appb and route to web-server-2
   - match:
     - uri:
-        prefix: /app2
+        prefix: /appb
     rewrite:
       uri: /
     route:
