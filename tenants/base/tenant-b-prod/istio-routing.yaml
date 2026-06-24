@@ -63,7 +63,6 @@ spec:
     - operation:
         ports: ["80"]
 ---
-# NEW POLICY: Allow Istio traffic into the second web server
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
